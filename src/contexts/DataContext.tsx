@@ -1,9 +1,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AppState, Student, ClassCategory, ScheduledClass, AttendanceRecord, Event, Announcement, User, UserRole, PaymentRecord, Location, ProgressReport, Reminder, UserAccount, FirebaseConfig } from '../types';
+import { AppState, Student, ClassCategory, ScheduledClass, AttendanceRecord, Event, Announcement, User, UserRole, PaymentRecord, Location, ProgressReport, Reminder, UserAccount } from '../types';
 import { INITIAL_STATE, ADMIN_EMAIL, TEACHER_EMAIL } from '../constants';
 import { initFirebase, getDb, saveToFirestore, deleteFromFirestore, getBatch } from '../services/firebaseService';
-import { onSnapshot, collection, setDoc, doc, writeBatch } from 'firebase/firestore';
+import { onSnapshot, collection, doc } from 'firebase/firestore';
+import type { FirebaseConfig } from '../types';
+
 
 interface DataContextType extends AppState {
   login: (email: string, password: string) => boolean;
@@ -31,7 +33,6 @@ interface DataContextType extends AppState {
   deleteReminder: (id: string) => void;
   deleteItem: (type: keyof AppState, id: string) => void;
   exportData: () => void;
-  updateFirebaseConfig: (config: FirebaseConfig) => void;
   downloadSystemBackup: () => void;
   restoreSystemBackup: (file: File) => void;
   clearAllData: () => Promise<void>;
@@ -45,29 +46,39 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Load from LocalStorage on mount
   useEffect(() => {
+    // load persisted app data (students, categories, etc.) from localStorage
     const saved = localStorage.getItem('kasthuri_data');
-    
     if (saved) {
-      try {
+        try {
         const parsed = JSON.parse(saved);
-        const mergedState = { ...INITIAL_STATE, ...parsed };
-        
-        if (!mergedState.locations) mergedState.locations = INITIAL_STATE.locations;
-        if (!mergedState.progressReports) mergedState.progressReports = [];
-        if (!mergedState.reminders) mergedState.reminders = [];
-        if (!mergedState.userAccounts) mergedState.userAccounts = INITIAL_STATE.userAccounts;
-        
-        setState(mergedState);
-
-        if (mergedState.firebaseConfig && mergedState.firebaseConfig.apiKey) {
-            const initialized = initFirebase(mergedState.firebaseConfig);
-            setIsFirebaseReady(initialized);
+        setState((prev) => ({ ...prev, ...parsed }));
+        } catch (e) {
+        console.error('Failed to parse local storage', e);
         }
-      } catch (e) {
-        console.error("Failed to parse local storage data");
-      }
     }
-  }, []);
+
+    // fetch Firebase config from public folder and initialize the app
+    const fetchConfig = async () => {
+        try {
+        const res = await fetch('/firebaseConfig.json');
+        const cfgJson = await res.json();
+        const cfg: FirebaseConfig = {
+            apiKey: cfgJson.apiKey!,
+            authDomain: cfgJson.authDomain!,
+            projectId: cfgJson.projectId!,
+            storageBucket: cfgJson.storageBucket!,
+            messagingSenderId: cfgJson.messagingSenderId!,
+            appId: cfgJson.appId!,
+        };
+        initFirebase(cfg);
+        setIsFirebaseReady(true);
+        
+        } catch (err) {
+        console.error('Unable to load Firebase config', err);
+        }
+    };
+    fetchConfig();
+    }, []);
 
   // Save to LocalStorage on change
   useEffect(() => {
@@ -525,13 +536,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       downloadAnchorNode.remove();
   };
 
-  const updateFirebaseConfig = (config: FirebaseConfig) => {
-      setState(prev => ({ ...prev, firebaseConfig: config }));
-      // Trigger init
-      const initialized = initFirebase(config);
-      setIsFirebaseReady(initialized);
-  };
-
   const downloadSystemBackup = () => {
       exportData();
   }
@@ -607,8 +611,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Best practice: Reset transactional data, keep configuration.
           locations: state.locations,
           categories: state.categories,
-          currentUser: state.currentUser,
-          firebaseConfig: state.firebaseConfig
+          currentUser: state.currentUser
       };
       
       setState(emptyState);
@@ -651,7 +654,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       addReminder, deleteReminder,
       deleteItem,
       exportData,
-      updateFirebaseConfig, downloadSystemBackup, restoreSystemBackup, clearAllData
+      downloadSystemBackup, restoreSystemBackup, clearAllData
     }}>
       {children}
     </DataContext.Provider>

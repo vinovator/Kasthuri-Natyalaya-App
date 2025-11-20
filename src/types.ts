@@ -148,5 +148,4 @@ export interface AppState {
   events: Event[];
   announcements: Announcement[];
   progressReports: ProgressReport[];
-  firebaseConfig?: FirebaseConfig;
 }

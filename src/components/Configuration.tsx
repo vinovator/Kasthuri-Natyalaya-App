@@ -5,7 +5,7 @@ import { ClassCategory, Location, FirebaseConfig, UserRole, UserAccount } from '
 import { Settings, MapPin, Plus, Edit2, Trash2, Save, X, Users, KeyRound, Database, Cloud, Download, Upload, UserPlus, AlertTriangle } from 'lucide-react';
 
 export const Configuration: React.FC = () => {
-  const { categories, locations, userAccounts, addCategory, updateCategory, addLocation, updateLocation, deleteItem, resetPassword, updateUserEmail, updateFirebaseConfig, firebaseConfig, downloadSystemBackup, restoreSystemBackup, addUser, clearAllData } = useData();
+  const { categories, locations, userAccounts, addCategory, updateCategory, addLocation, updateLocation, deleteItem, resetPassword, updateUserEmail, downloadSystemBackup, restoreSystemBackup, addUser, clearAllData } = useData();
   const [activeTab, setActiveTab] = useState<'CATEGORIES' | 'LOCATIONS' | 'USERS' | 'DATABASE'>('CATEGORIES');
 
   // Category Form State
@@ -25,9 +25,6 @@ export const Configuration: React.FC = () => {
   // Add User Form State
   const [showUserForm, setShowUserForm] = useState(false);
   const [userForm, setUserForm] = useState<UserAccount>({ name: '', email: '', password: '', role: UserRole.TEACHER });
-
-  // Database Form State
-  const [fbForm, setFbForm] = useState<FirebaseConfig>(firebaseConfig || { apiKey: '', authDomain: '', projectId: '', storageBucket: '', messagingSenderId: '', appId: '' });
 
   // --- Category Handlers ---
   const handleCatSubmit = (e: React.FormEvent) => {
@@ -122,7 +119,6 @@ export const Configuration: React.FC = () => {
   // --- Database Handlers ---
   const handleFirebaseSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-      updateFirebaseConfig(fbForm);
   };
 
   const handleRestore = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -469,50 +465,6 @@ export const Configuration: React.FC = () => {
                             </label>
                         </div>
                     </div>
-               </section>
-
-               {/* 2. Firebase Configuration Section */}
-               <section className="bg-white p-6 rounded-lg shadow border-t-4 border-orange-500">
-                    <h3 className="text-lg font-bold text-natyalaya-900 mb-2 flex items-center">
-                        <Cloud className="w-5 h-5 mr-2 text-orange-500"/> Cloud Database (Google Firebase)
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-6">
-                        Connect to Firebase Firestore to sync data across multiple devices in real-time.
-                        Without this, data remains only on this browser.
-                    </p>
-
-                    <form onSubmit={handleFirebaseSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">API Key</label>
-                            <input required className="w-full p-2 border rounded text-sm font-mono bg-gray-50" value={fbForm.apiKey} onChange={e => setFbForm({...fbForm, apiKey: e.target.value})} />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Auth Domain</label>
-                            <input required className="w-full p-2 border rounded text-sm font-mono bg-gray-50" value={fbForm.authDomain} onChange={e => setFbForm({...fbForm, authDomain: e.target.value})} />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Project ID</label>
-                            <input required className="w-full p-2 border rounded text-sm font-mono bg-gray-50" value={fbForm.projectId} onChange={e => setFbForm({...fbForm, projectId: e.target.value})} />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Storage Bucket</label>
-                            <input required className="w-full p-2 border rounded text-sm font-mono bg-gray-50" value={fbForm.storageBucket} onChange={e => setFbForm({...fbForm, storageBucket: e.target.value})} />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Messaging Sender ID</label>
-                            <input required className="w-full p-2 border rounded text-sm font-mono bg-gray-50" value={fbForm.messagingSenderId} onChange={e => setFbForm({...fbForm, messagingSenderId: e.target.value})} />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">App ID</label>
-                            <input required className="w-full p-2 border rounded text-sm font-mono bg-gray-50" value={fbForm.appId} onChange={e => setFbForm({...fbForm, appId: e.target.value})} />
-                        </div>
-
-                        <div className="md:col-span-2 flex justify-end pt-4">
-                            <button type="submit" className="px-6 py-2 bg-orange-600 text-white font-bold rounded hover:bg-orange-700 shadow-lg">
-                                Connect to Cloud
-                            </button>
-                        </div>
-                    </form>
                </section>
 
                {/* 3. Factory Reset Section (Danger Zone) */}
