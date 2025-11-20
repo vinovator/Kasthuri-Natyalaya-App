@@ -1,5 +1,7 @@
 # Kasthuri Natyalaya - The Digital Gurukulam
 
+**Live App:** [https://karthuri-natyalaya.web.app](https://karthuri-natyalaya.web.app)
+
 A comprehensive School Management System designed specifically for Classical Bharatanatyam Dance Schools. This application manages students, scheduling, fees, attendance, and communications with a culturally immersive UI.
 
 ## 🌟 Key Features
@@ -17,11 +19,11 @@ A comprehensive School Management System designed specifically for Classical Bha
 ### 💰 Fee Management (Dakshina)
 *   **Auto-Calculation:** Fees are calculated based on class duration and category rates.
 *   **Tracking:** Mark payments as Paid/Pending.
-*   **Reminders:** Send AI-generated payment reminders via Email, SMS, or WhatsApp.
+*   **Reminders:** Send AI-generated payment reminders via Email (EmailJS), SMS, or WhatsApp.
 
 ### 🤖 AI-Powered Communications
 *   **Gemini Integration:** Draft professional announcements and event descriptions using Google Gemini AI.
-*   **Multi-Channel:** Publish notifications via Email, SMS, or WhatsApp.
+*   **Multi-Channel:** Publish notifications via Email (automated via EmailJS), SMS, or WhatsApp (via deep links).
 
 ### 📊 Progress Tracking
 *   **Digital Report Cards:** Grade students on Talam (Rhythm), Bhavam (Expression), Angashudhi (Form), and Memory.
@@ -37,6 +39,7 @@ A comprehensive School Management System designed specifically for Classical Bha
 *   **Styling:** Tailwind CSS
 *   **Database:** Firebase Firestore
 *   **AI:** Google Gemini API
+*   **Email:** EmailJS
 *   **Deployment:** Firebase Hosting
 
 ## 🚀 Setup & Deployment
