@@ -1,6 +1,6 @@
 # Kasthuri Natyalaya - The Digital Gurukulam
 
-**Live App:** [https://karthuri-natyalaya.web.app](https://karthuri-natyalaya.web.app)
+**Live App:** [https://kasthuri-natyalaya.web.app](https://kasthuri-natyalaya.web.app)
 
 A comprehensive School Management System designed specifically for Classical Bharatanatyam Dance Schools. This application manages students, scheduling, fees, attendance, and communications with a culturally immersive UI.
 
