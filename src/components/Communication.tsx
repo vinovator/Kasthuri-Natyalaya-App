@@ -131,11 +131,12 @@ export const Communication: React.FC = () => {
       e.preventDefault();
       const recipients = getRecipientCount(evtForm.targetAudience || 'ALL');
       
-      addEvent({
-          id: `evt_${Date.now()}`,
+      const newEvent: Event = {
           ...evtForm as Event,
+          id: `evt_${Date.now()}`,
           sentVia: selectedEventChannels
-      });
+      };
+      addEvent(newEvent);
 
       alert(`Event Created and Notification sent to ${recipients} recipients via [${selectedEventChannels.join(', ')}].`);
 

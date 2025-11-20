@@ -35,7 +35,8 @@ export const Configuration: React.FC = () => {
     if (editingCatId) {
       updateCategory({ ...catForm, id: editingCatId } as ClassCategory);
     } else {
-      addCategory({ id: `cat_${Date.now()}`, ...catForm as ClassCategory });
+      const newCategory: ClassCategory = { ...catForm as ClassCategory, id: `cat_${Date.now()}` };
+      addCategory(newCategory);
     }
     resetCatForm();
   };
@@ -58,7 +59,8 @@ export const Configuration: React.FC = () => {
     if (editingLocId) {
       updateLocation({ ...locForm, id: editingLocId } as Location);
     } else {
-      addLocation({ id: `loc_${Date.now()}`, ...locForm as Location });
+      const newLocation: Location = { ...locForm as Location, id: `loc_${Date.now()}` };
+      addLocation(newLocation);
     }
     resetLocForm();
   };
